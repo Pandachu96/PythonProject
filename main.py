@@ -62,8 +62,8 @@ if __name__ == '__main__':
         except pyautogui.ImageNotFoundException:
             amount = 0
 
-        print(item, ': ', amount)
+        print(item[:-4], ': ', amount)
         if amount < 4:
-            low_items.append(item)
+            low_items.append(item[:-4])
 
     print(low_items)
