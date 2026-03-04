@@ -10,8 +10,6 @@ def locate(item):
 
 
 if __name__ == '__main__':
-    # coords = 1216, 338, 1558, 612
-    # REGION = [1216, 338, 342, 274]
     IMG_DIRECTORY = os.getcwd()+'/images'
 
     win = pygetwindow.getWindowsWithTitle('BLACK DESERT - 516771')[0]
