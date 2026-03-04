@@ -1,4 +1,4 @@
-import pyautogui, os, pygetwindow, time
+import pyautogui, os, pygetwindow, time, json
 
 
 def impath(filename):
@@ -53,17 +53,21 @@ if __name__ == '__main__':
     bdo.activate()
     time.sleep(2)
 
+    items = {}
     low_items = []
     for item in os.listdir(ITEM_DIRECTORY):
         try:
             amount = len(locate_all(itempath(item)))
 
-
         except pyautogui.ImageNotFoundException:
             amount = 0
 
-        print(item[:-4], ': ', amount)
+        items[item[:-4]] = amount
         if amount < 4:
             low_items.append(item[:-4])
+
+    with open('data.json', 'w') as f:
+        json.dump(items, f, sort_keys = True, indent = 4,
+               ensure_ascii = False)
 
     print(low_items)
