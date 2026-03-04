@@ -1,4 +1,4 @@
-import pyautogui, os, pygetwindow, pyscreeze, time
+import pyautogui, os, pygetwindow, time
 
 
 def impath(filename):
@@ -49,12 +49,21 @@ def locate_all(path, region = region(), confidence=0.8, distance=10):
 if __name__ == '__main__':
     ITEM_DIRECTORY = os.getcwd() + '/images/items'
 
-    win = pygetwindow.getWindowsWithTitle('BLACK DESERT - 516771')[0]
-    win.activate()
+    bdo = pygetwindow.getWindowsWithTitle('BLACK DESERT - 516771')[0]
+    bdo.activate()
     time.sleep(2)
 
+    low_items = []
     for item in os.listdir(ITEM_DIRECTORY):
-        amount = len(locate_all(itempath(item)))
-        print(item, ': ', amount)
+        try:
+            amount = len(locate_all(itempath(item)))
 
-    breakpoint()
+
+        except pyautogui.ImageNotFoundException:
+            amount = 0
+
+        print(item, ': ', amount)
+        if amount < 4:
+            low_items.append(item)
+
+    print(low_items)
