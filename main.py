@@ -4,18 +4,14 @@ import pyautogui, os, pygetwindow, pyscreeze, time
 def impath(filename):
     return os.path.join('images', filename)
 
+def itempath(filename):
+    return os.path.join('images/items', filename)
+
 def locate(item):
     rock = pyautogui.locateOnScreen(item)
     return rock
 
-
-if __name__ == '__main__':
-    IMG_DIRECTORY = os.getcwd()+'/images'
-
-    win = pygetwindow.getWindowsWithTitle('BLACK DESERT - 516771')[0]
-    win.activate()
-    time.sleep(2)
-
+def region():
     try:
         top_left = pyautogui.locateOnScreen(impath('top_left.png'), confidence=0.8)
         top_right = pyautogui.locateOnScreen(impath('top_right.png'), confidence=0.8)
@@ -33,15 +29,32 @@ if __name__ == '__main__':
         # Get absolute coordinates for bottom right corner of storage inventory
         bot_right_corner = (top_right_corner[0], bot_left_corner[1])
 
+        storage_region = (top_left_corner[0], top_left_corner[1], top_right_corner[0] - top_left_corner[0],
+                  bot_right_corner[1] - top_right_corner[1])
+
     except pyautogui.ImageNotFoundException:
-        print('Image not found')
+        storage_region = 0
+
+    return storage_region
+
+def locate_all(path, region = region(), confidence=0.8, distance=10):
+    distance = pow(distance, 2)
+    elements = []
+    for element in pyautogui.locateAllOnScreen(path, region=region, confidence=confidence):
+        if all(map(lambda x: pow(element.left - x.left, 2) + pow(element.top - x.top, 2) > distance, elements)):
+            elements.append(element)
+    return elements
+
+
+if __name__ == '__main__':
+    ITEM_DIRECTORY = os.getcwd() + '/images/items'
+
+    win = pygetwindow.getWindowsWithTitle('BLACK DESERT - 516771')[0]
+    win.activate()
+    time.sleep(2)
+
+    for item in os.listdir(ITEM_DIRECTORY):
+        amount = len(locate_all(itempath(item)))
+        print(item, ': ', amount)
 
     breakpoint()
-    # Average dimensions of an item = 33pt x 33pt
-    # for image in os.listdir(IMG_DIRECTORY):
-    #     try:
-    #         location = pyautogui.locateOnScreen(impath('potion.png'), region=[bot_right_x, bot_right_y, 34, 34], confidence=0.8)
-    #         print(image)
-    #
-    #     except pyautogui.ImageNotFoundException:
-    #         print('Image not found')
