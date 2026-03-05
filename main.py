@@ -1,15 +1,12 @@
 import pyautogui, os, pygetwindow, time, json
+import image_scaling
 
 
 def impath(filename):
     return os.path.join('images', filename)
 
 def itempath(filename):
-    return os.path.join('images/items', filename)
-
-def locate(item):
-    rock = pyautogui.locateOnScreen(item)
-    return rock
+    return os.path.join('images/items/nb', filename)
 
 def region():
     try:
@@ -37,17 +34,19 @@ def region():
 
     return storage_region
 
-def locate_all(path, region = region(), confidence=0.8, distance=10):
+def locate_all(path, region = region(), confidence=0.81, distance=10):
     distance = pow(distance, 2)
-    elements = []
-    for element in pyautogui.locateAllOnScreen(path, region=region, confidence=confidence):
-        if all(map(lambda x: pow(element.left - x.left, 2) + pow(element.top - x.top, 2) > distance, elements)):
-            elements.append(element)
-    return elements
+    items = []
+    scaled_up = image_scaling.image_scaled_up(path, ITEM_SCALE+1)
+    for item in pyautogui.locateAllOnScreen(scaled_up, region=region, confidence=confidence):
+        if all(map(lambda x: pow(item.left - x.left, 2) + pow(item.top - x.top, 2) > distance, items)):
+            items.append(item)
+    return items
 
 
 if __name__ == '__main__':
-    ITEM_DIRECTORY = os.getcwd() + '/images/items'
+    ITEM_DIRECTORY = os.getcwd() + '/images/items/nb'
+    ITEM_SCALE = 0.05
 
     bdo = pygetwindow.getWindowsWithTitle('BLACK DESERT')[0]
     bdo.activate()
@@ -59,7 +58,7 @@ if __name__ == '__main__':
         try:
             amount = len(locate_all(itempath(item)))
 
-        except pyautogui.ImageNotFoundException:
+        except:
             amount = 0
 
         items[item[:-4]] = amount
