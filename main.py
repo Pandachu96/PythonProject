@@ -49,7 +49,7 @@ def locate_all(path, region = region(), confidence=0.8, distance=10):
 if __name__ == '__main__':
     ITEM_DIRECTORY = os.getcwd() + '/images/items'
 
-    bdo = pygetwindow.getWindowsWithTitle('BLACK DESERT - 516771')[0]
+    bdo = pygetwindow.getWindowsWithTitle('BLACK DESERT')[0]
     bdo.activate()
     time.sleep(2)
 
