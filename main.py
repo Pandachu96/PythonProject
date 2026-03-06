@@ -46,6 +46,8 @@ def locate_all(path, region = region(), confidence=0.81, distance=10):
 
 if __name__ == '__main__':
     ITEM_DIRECTORY = os.getcwd() + '/images/items/nb'
+
+    # Original images 75% scale
     ITEM_SCALE = 0.05
 
     bdo = pygetwindow.getWindowsWithTitle('BLACK DESERT')[0]
